@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 namespace ExplicitDefaultAccessModifiersAnalyzer.Tests
 {
 	[TestFixture]
-	public class PropertyTests : CodeFixVerifier
+	public class PropertyTests : TestsBase
 	{
 		[Test]
 		public void ExplicitPrivateProperty()
@@ -100,16 +100,6 @@ namespace N
 	}
 }";
 			VerifyCSharpDiagnostic(Test);
-		}
-
-		protected override CodeFixProvider GetCSharpCodeFixProvider()
-		{
-			return new ExplicitDefaultAccessModifiersCodeFixProvider();
-		}
-
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-		{
-			return new ExplicitDefaultAccessModifiersAnalyzer();
 		}
 	}
 }

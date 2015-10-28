@@ -18,30 +18,24 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 		public override void Initialize(AnalysisContext context)
 		{
 			context.RegisterSyntaxNodeAction(AnalyzeClassOrStructOrInterfaceDeclaration, SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.EnumDeclaration);
-			context.RegisterSyntaxNodeAction(AnalyzeField, SyntaxKind.FieldDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeFieldOrEvent, SyntaxKind.FieldDeclaration, SyntaxKind.EventFieldDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeMethodOrConstructor, SyntaxKind.MethodDeclaration, SyntaxKind.ConstructorDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
-#warning Delegate
+			context.RegisterSyntaxNodeAction(AnalyzeDelegate, SyntaxKind.DelegateDeclaration);
 		}
 
 		static void AnalyzeClassOrStructOrInterfaceDeclaration(SyntaxNodeAnalysisContext context)
 		{
 			var node = (BaseTypeDeclarationSyntax)context.Node;
-			var defaultModifier = default(SyntaxKind);
-			if (node.Parent.IsKind(SyntaxKind.ClassDeclaration) || node.Parent.IsKind(SyntaxKind.StructDeclaration))
-			{
-				defaultModifier = SyntaxKind.PrivateKeyword;
-			}
-			else
-			{
-				defaultModifier = SyntaxKind.InternalKeyword;
-			}
+			var defaultModifier = node.Parent.IsKind(SyntaxKind.NamespaceDeclaration)
+				? SyntaxKind.InternalKeyword
+				: SyntaxKind.PrivateKeyword;
 			HandleDefaultModifier(context, node.Modifiers, defaultModifier);
 		}
 
-		static void AnalyzeField(SyntaxNodeAnalysisContext context)
+		static void AnalyzeFieldOrEvent(SyntaxNodeAnalysisContext context)
 		{
-			var node = (FieldDeclarationSyntax)context.Node;
+			var node = (BaseFieldDeclarationSyntax)context.Node;
 			HandleDefaultModifier(context, node.Modifiers, SyntaxKind.PrivateKeyword);
 		}
 
@@ -55,6 +49,15 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 		{
 			var node = (PropertyDeclarationSyntax)context.Node;
 			HandleDefaultModifier(context, node.Modifiers, SyntaxKind.PrivateKeyword);
+		}
+
+		static void AnalyzeDelegate(SyntaxNodeAnalysisContext context)
+		{
+			var node = (DelegateDeclarationSyntax)context.Node;
+			var defaultModifier = node.Parent.IsKind(SyntaxKind.NamespaceDeclaration)
+				? SyntaxKind.InternalKeyword
+				: SyntaxKind.PrivateKeyword;
+			HandleDefaultModifier(context, node.Modifiers, defaultModifier);
 		}
 
 		static void HandleDefaultModifier(SyntaxNodeAnalysisContext context, SyntaxTokenList modifiers, SyntaxKind defaultModifier)

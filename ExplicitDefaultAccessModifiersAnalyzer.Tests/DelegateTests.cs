@@ -8,17 +8,17 @@ using Microsoft.CodeAnalysis;
 namespace ExplicitDefaultAccessModifiersAnalyzer.Tests
 {
 	[TestFixture]
-	public class FieldTests : TestsBase
+	public class DelegateTests : TestsBase
 	{
 		[Test]
-		public void ExplicitPrivateField()
+		public void ExplicitPrivateDelegateInsideClass()
 		{
-            const string Test = @"
+			const string Test = @"
 namespace N
 {
 	class C
 	{ 
-		private int i;
+		private delegate void D();
 	}
 }";
 			const string Fixed = @"
@@ -26,7 +26,7 @@ namespace N
 {
 	class C
 	{ 
-		int i;
+		delegate void D();
 	}
 }";
 			var expected = new DiagnosticResult
@@ -43,51 +43,31 @@ namespace N
 		}
 
 		[Test]
-		public void ImplicitPrivateField()
+		public void ImplicitPrivateDelegateInsideClass()
 		{
 			const string Test = @"
 namespace N
 {
 	class C
 	{ 
-		int i;
+		delegate void D();
 	}
 }";
 			VerifyCSharpDiagnostic(Test);
 		}
 
 		[Test]
-		public void ProtectedInternalField()
+		public void ExplicitInternalDelegateInsideNamespace()
 		{
 			const string Test = @"
 namespace N
 {
-	class C
-	{ 
-		protected internal int i;
-	}
-}";
-			VerifyCSharpDiagnostic(Test);
-		}
-
-		[Test]
-		public void ExplicitPrivateEvent()
-		{
-			const string Test = @"
-namespace N
-{
-	class C
-	{ 
-		private event EventHandler E;
-	}
+	internal delegate void D();
 }";
 			const string Fixed = @"
 namespace N
 {
-	class C
-	{ 
-		event EventHandler E;
-	}
+	delegate void D();
 }";
 			var expected = new DiagnosticResult
 			{
@@ -95,7 +75,7 @@ namespace N
 				Severity = DiagnosticSeverity.Warning,
 				Locations = new[]
 				{
-					new DiagnosticResultLocation("Test0.cs", 6, 3)
+					new DiagnosticResultLocation("Test0.cs", 4, 2)
 				}
 			};
 			VerifyCSharpDiagnostic(Test, expected);
@@ -103,15 +83,12 @@ namespace N
 		}
 
 		[Test]
-		public void ImplicitPrivateEvent()
+		public void ImplicitInternalDelegateInsideNamespace()
 		{
 			const string Test = @"
 namespace N
 {
-	class C
-	{ 
-		event EventHandler E;
-	}
+	delegate void D();
 }";
 			VerifyCSharpDiagnostic(Test);
 		}

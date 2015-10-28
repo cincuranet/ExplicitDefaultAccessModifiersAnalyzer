@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 namespace ExplicitDefaultAccessModifiersAnalyzer.Tests
 {
 	[TestFixture]
-	public class MethodConstructorTests : CodeFixVerifier
+	public class MethodConstructorTests : TestsBase
 	{
 		[Test]
 		public void ExplicitPrivateMethod()
@@ -128,16 +128,6 @@ namespace N
 	}
 }";
 			VerifyCSharpDiagnostic(Test);
-		}
-
-		protected override CodeFixProvider GetCSharpCodeFixProvider()
-		{
-			return new ExplicitDefaultAccessModifiersCodeFixProvider();
-		}
-
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
-		{
-			return new ExplicitDefaultAccessModifiersAnalyzer();
 		}
 	}
 }

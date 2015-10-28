@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 namespace ExplicitDefaultAccessModifiersAnalyzer.Tests
 {
 	[TestFixture]
-	public class ClassStructInterfaceEnumTests : CodeFixVerifier
+	public class ClassStructInterfaceEnumTests : TestsBase
 	{
 		[Test]
 		public void RegularExplicitInternalClass()
@@ -116,6 +116,34 @@ namespace N
 				Locations = new[]
 				{
 					new DiagnosticResultLocation("Test0.cs", 4, 2)
+				}
+			};
+			VerifyCSharpDiagnostic(Test, expected);
+			VerifyCSharpFix(Test, Fixed);
+		}
+
+		[Test]
+		public void RegularExplicitInternalEnum()
+		{
+			const string Test = @"
+namespace N
+{
+	internal enum E
+	{ }
+}";
+			const string Fixed = @"
+namespace N
+{
+	enum E
+	{ }
+}";
+			var expected = new DiagnosticResult
+			{
+				Id = ExplicitDefaultAccessModifiersAnalyzer.DiagnosticId,
+				Severity = DiagnosticSeverity.Warning,
+				Locations = new[]
+				{
+					new DiagnosticResultLocation("Test.cs", 4, 2)
 				}
 			};
 			VerifyCSharpDiagnostic(Test, expected);
@@ -259,34 +287,6 @@ namespace N
 		}
 
 		[Test]
-		public void RegularExplicitInternalEnum()
-		{
-			const string Test = @"
-namespace N
-{
-	internal enum E
-	{ }
-}";
-			const string Fixed = @"
-namespace N
-{
-	enum E
-	{ }
-}";
-			var expected = new DiagnosticResult
-			{
-				Id = ExplicitDefaultAccessModifiersAnalyzer.DiagnosticId,
-				Severity = DiagnosticSeverity.Warning,
-				Locations = new[]
-				{
-					new DiagnosticResultLocation("Test.cs", 4, 2)
-				}
-			};
-			VerifyCSharpDiagnostic(Test, expected);
-			VerifyCSharpFix(Test, Fixed);
-		}
-
-		[Test]
 		public void NestedExplicitPrivateEnumInClass()
 		{
 			const string Test = @"
@@ -354,16 +354,72 @@ namespace N
 			VerifyCSharpFix(Test, Fixed);
 		}
 
-#warning Nested interface
-
-		protected override CodeFixProvider GetCSharpCodeFixProvider()
+		[Test]
+		public void NestedExplicitPrivateInterfaceInClass()
 		{
-			return new ExplicitDefaultAccessModifiersCodeFixProvider();
+			const string Test = @"
+namespace N
+{
+	class C
+	{
+		private interface NI
+		{ }
+	}
+}";
+			const string Fixed = @"
+namespace N
+{
+	class C
+	{
+		interface NI
+		{ }
+	}
+}";
+			var expected = new DiagnosticResult
+			{
+				Id = ExplicitDefaultAccessModifiersAnalyzer.DiagnosticId,
+				Severity = DiagnosticSeverity.Warning,
+				Locations = new[]
+				{
+					new DiagnosticResultLocation("Test0.cs", 6, 3)
+				}
+			};
+			VerifyCSharpDiagnostic(Test, expected);
+			VerifyCSharpFix(Test, Fixed);
 		}
 
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+		[Test]
+		public void NestedExplicitPrivateInterfaceInStruct()
 		{
-			return new ExplicitDefaultAccessModifiersAnalyzer();
+			const string Test = @"
+namespace N
+{
+	struct S
+	{
+		private interface NI
+		{ }
+	}
+}";
+			const string Fixed = @"
+namespace N
+{
+	struct S
+	{
+		interface NI
+		{ }
+	}
+}";
+			var expected = new DiagnosticResult
+			{
+				Id = ExplicitDefaultAccessModifiersAnalyzer.DiagnosticId,
+				Severity = DiagnosticSeverity.Warning,
+				Locations = new[]
+				{
+					new DiagnosticResultLocation("Test0.cs", 6, 3)
+				}
+			};
+			VerifyCSharpDiagnostic(Test, expected);
+			VerifyCSharpFix(Test, Fixed);
 		}
 	}
 }

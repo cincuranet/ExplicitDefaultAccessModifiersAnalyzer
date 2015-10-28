@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelegateTests.cs" />
     <Compile Include="PropertyTests.cs" />
     <Compile Include="MethodConstructorTests.cs" />
     <Compile Include="FieldTests.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Helpers\DiagnosticVerifier.Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ClassStructInterfaceEnumTests.cs" />
+    <Compile Include="TestsBase.cs" />
     <Compile Include="Verifiers\CodeFixVerifier.cs" />
     <Compile Include="Verifiers\DiagnosticVerifier.cs" />
   </ItemGroup>
