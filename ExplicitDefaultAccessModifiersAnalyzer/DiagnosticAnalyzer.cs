@@ -21,6 +21,10 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 			context.RegisterSyntaxNodeAction(AnalyzeField, SyntaxKind.FieldDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeEnum, SyntaxKind.EnumDeclaration);
+#warning Delegate
+#warning Explicit interface implementation
+#warning Contructor
 		}
 
 		static void AnalyzeClassOrStructOrInterfaceDeclaration(SyntaxNodeAnalysisContext context)

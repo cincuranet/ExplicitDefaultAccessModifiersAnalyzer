@@ -258,6 +258,8 @@ namespace N
 			VerifyCSharpFix(Test, Fixed);
 		}
 
+#warning Nested interface
+
 		protected override CodeFixProvider GetCSharpCodeFixProvider()
 		{
 			return new ExplicitDefaultAccessModifiersCodeFixProvider();
