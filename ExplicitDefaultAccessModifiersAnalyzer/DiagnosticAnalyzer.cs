@@ -22,7 +22,6 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 			context.RegisterSyntaxNodeAction(AnalyzeMethodOrConstructor, SyntaxKind.MethodDeclaration, SyntaxKind.ConstructorDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
 #warning Delegate
-#warning Explicit interface implementation
 		}
 
 		static void AnalyzeClassOrStructOrInterfaceDeclaration(SyntaxNodeAnalysisContext context)
