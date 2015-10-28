@@ -17,19 +17,17 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 
 		public override void Initialize(AnalysisContext context)
 		{
-			context.RegisterSyntaxNodeAction(AnalyzeClassOrStructOrInterfaceDeclaration, SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.InterfaceDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeClassOrStructOrInterfaceDeclaration, SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.InterfaceDeclaration, SyntaxKind.EnumDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeField, SyntaxKind.FieldDeclaration);
-			context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
+			context.RegisterSyntaxNodeAction(AnalyzeMethodOrConstructor, SyntaxKind.MethodDeclaration, SyntaxKind.ConstructorDeclaration);
 			context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
-			context.RegisterSyntaxNodeAction(AnalyzeEnum, SyntaxKind.EnumDeclaration);
 #warning Delegate
 #warning Explicit interface implementation
-#warning Contructor
 		}
 
 		static void AnalyzeClassOrStructOrInterfaceDeclaration(SyntaxNodeAnalysisContext context)
 		{
-			var node = (TypeDeclarationSyntax)context.Node;
+			var node = (BaseTypeDeclarationSyntax)context.Node;
 			var defaultModifier = default(SyntaxKind);
 			if (node.Parent.IsKind(SyntaxKind.ClassDeclaration) || node.Parent.IsKind(SyntaxKind.StructDeclaration))
 			{
@@ -48,9 +46,9 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 			HandleDefaultModifier(context, node.Modifiers, SyntaxKind.PrivateKeyword);
 		}
 
-		static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
+		static void AnalyzeMethodOrConstructor(SyntaxNodeAnalysisContext context)
 		{
-			var node = (MethodDeclarationSyntax)context.Node;
+			var node = (BaseMethodDeclarationSyntax)context.Node;
 			HandleDefaultModifier(context, node.Modifiers, SyntaxKind.PrivateKeyword);
 		}
 
@@ -58,21 +56,6 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 		{
 			var node = (PropertyDeclarationSyntax)context.Node;
 			HandleDefaultModifier(context, node.Modifiers, SyntaxKind.PrivateKeyword);
-		}
-
-		static void AnalyzeEnum(SyntaxNodeAnalysisContext context)
-		{
-			var node = (EnumDeclarationSyntax)context.Node;
-			var defaultModifier = default(SyntaxKind);
-			if (node.Parent.IsKind(SyntaxKind.ClassDeclaration) || node.Parent.IsKind(SyntaxKind.StructDeclaration))
-			{
-				defaultModifier = SyntaxKind.PrivateKeyword;
-			}
-			else
-			{
-				defaultModifier = SyntaxKind.InternalKeyword;
-			}
-			HandleDefaultModifier(context, node.Modifiers, defaultModifier);
 		}
 
 		static void HandleDefaultModifier(SyntaxNodeAnalysisContext context, SyntaxTokenList modifiers, SyntaxKind defaultModifier)
