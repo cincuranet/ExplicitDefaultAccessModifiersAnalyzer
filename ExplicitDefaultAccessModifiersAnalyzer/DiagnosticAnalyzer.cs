@@ -56,6 +56,21 @@ namespace ExplicitDefaultAccessModifiersAnalyzer
 			HandleDefaultModifier(context, node.Modifiers, SyntaxKind.PrivateKeyword);
 		}
 
+		static void AnalyzeEnum(SyntaxNodeAnalysisContext context)
+		{
+			var node = (EnumDeclarationSyntax)context.Node;
+			var defaultModifier = default(SyntaxKind);
+			if (node.Parent.IsKind(SyntaxKind.ClassDeclaration) || node.Parent.IsKind(SyntaxKind.StructDeclaration))
+			{
+				defaultModifier = SyntaxKind.PrivateKeyword;
+			}
+			else
+			{
+				defaultModifier = SyntaxKind.InternalKeyword;
+			}
+			HandleDefaultModifier(context, node.Modifiers, defaultModifier);
+		}
+
 		static void HandleDefaultModifier(SyntaxNodeAnalysisContext context, SyntaxTokenList modifiers, SyntaxKind defaultModifier)
 		{
 			var index = modifiers.IndexOf(defaultModifier);

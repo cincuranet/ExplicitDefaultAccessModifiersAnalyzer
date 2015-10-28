@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnumTests.cs" />
     <Compile Include="PropertyTests.cs" />
     <Compile Include="MethodTests.cs" />
     <Compile Include="FieldTests.cs" />
