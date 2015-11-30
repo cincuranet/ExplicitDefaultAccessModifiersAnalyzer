@@ -14,6 +14,7 @@ Checks for explicit default access modifiers - like `private` on a method.
 More info: http://blog.cincura.net/id/2335336/ .
 		</description>
 		<tags>ExplicitDefaultAccessModifiersAnalyzer, analyzers, modifiers</tags>
+		<developmentDependency>true</developmentDependency>
 	</metadata>
 	<files>
 		<file src="*.dll" target="analyzers\dotnet\cs" exclude="**\Microsoft.CodeAnalysis.*;**\System.Collections.Immutable.*;**\System.Reflection.Metadata.*;**\System.Composition.*" />
